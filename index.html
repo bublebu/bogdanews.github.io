@@ -3,216 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOGDANEWS | CENTRAL FEED</title>
+    <title>BOGDANEWS — ГЛАВНЫЕ СОБЫТИЯ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0f1113;
-            --surface: #1a1d21;
-            --primary: #3b82f6;
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --border: #334155;
+            --main-bg: #ffffff;
+            --text-dark: #1a1a1a;
+            --accent-red: #c00;
+            --border-gray: #e2e2e2;
+            --secondary-text: #666;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
-            line-height: 1.5;
-            padding-bottom: 50px;
+            background-color: var(--main-bg);
+            color: var(--text-dark);
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
+        /* ВЕРХНЯЯ ПАНЕЛЬ */
         header {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
+            border-bottom: 4px double var(--text-dark);
+            margin: 0 auto;
+            max-width: 1200px;
             padding: 20px 0;
             text-align: center;
-            margin-bottom: 40px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
 
-        header h1 {
-            font-size: 1.2rem;
-            letter-spacing: 4px;
+        .site-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin: 0;
             text-transform: uppercase;
-            font-weight: 900;
-            color: var(--primary);
+            letter-spacing: -1px;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
+        .sub-header {
+            border-top: 1px solid var(--border-gray);
+            border-bottom: 1px solid var(--border-gray);
+            margin-top: 10px;
+            padding: 5px 0;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* СЕТКА НОВОСТЕЙ */
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
             padding: 0 20px;
         }
 
-        /* ГЛАВНАЯ СЕТКА */
-        #news-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        #featured-news {
+            display: flex;
+            flex-direction: column;
             gap: 30px;
         }
 
-        /* ГЛАВНАЯ НОВОСТЬ (ПЕРВАЯ В СПИСКЕ) */
-        #news-container .post:first-child {
-            grid-column: 1 / -1;
-            display: flex;
-            gap: 25px;
-            background: var(--surface);
-            padding: 0;
-            border-radius: 12px;
+        .news-article {
+            border-bottom: 1px solid var(--border-gray);
+            padding-bottom: 25px;
         }
 
-        .post {
-            background: var(--surface);
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            transition: transform 0.2s, border-color 0.2s;
-            display: flex;
-            flex-direction: column;
+        .news-article:last-child {
+            border-bottom: none;
         }
 
-        .post:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
-
-        .post-img-wrapper {
-            width: 100%;
-            height: 200px;
-            background: #24292e;
-            overflow: hidden;
-        }
-
-        /* ФОТО ДЛЯ ГЛАВНОЙ НОВОСТИ */
-        #news-container .post:first-child .post-img-wrapper {
-            width: 60%;
-            height: 450px;
-        }
-
-        .post-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .post-body {
-            padding: 20px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        #news-container .post:first-child .post-body {
-            width: 40%;
-            justify-content: center;
-            padding: 40px;
-        }
-
-        .tag {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            font-size: 0.7rem;
-            padding: 2px 8px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
+        .category {
+            color: var(--accent-red);
             font-weight: bold;
-            width: fit-content;
-        }
-
-        .post-date {
-            color: var(--text-muted);
-            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-size: 0.75rem;
             margin-bottom: 8px;
+            display: block;
         }
 
-        .post-title {
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            color: #fff;
+        .news-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
             line-height: 1.2;
+            margin: 0 0 15px 0;
+            cursor: pointer;
         }
 
-        .post-content {
-            color: var(--text-muted);
-            font-size: 0.95rem;
+        .news-meta {
+            font-size: 0.85rem;
+            color: var(--secondary-text);
+            margin-bottom: 15px;
         }
 
-        /* ОГРАНИЧЕНИЕ ТЕКСТА (ЧТОБЫ КАРТОЧКИ БЫЛИ РОВНЫЕ) */
-        .post:not(:first-child) .post-content {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+        .news-content {
+            line-height: 1.6;
+            color: #333;
+            font-size: 1.05rem;
         }
 
-        @media (max-width: 850px) {
-            #news-container .post:first-child {
-                flex-direction: column;
-            }
-            #news-container .post:first-child .post-img-wrapper,
-            #news-container .post:first-child .post-body {
-                width: 100%;
-            }
-            #news-container .post:first-child .post-img-wrapper {
-                height: 250px;
-            }
+        .news-image-container {
+            margin-top: 15px;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+        }
+
+        .news-image {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid var(--border-gray);
+        }
+
+        /* БОКОВАЯ ПАНЕЛЬ */
+        aside {
+            border-left: 1px solid var(--border-gray);
+            padding-left: 20px;
+        }
+
+        .sidebar-title {
+            font-family: 'Playfair Display', serif;
+            border-bottom: 2px solid var(--text-dark);
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            background: #f9f9f9;
+            border-top: 1px solid var(--border-gray);
+            padding: 40px 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--secondary-text);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            main { grid-template-columns: 1fr; }
+            aside { border-left: none; padding-left: 0; }
+            .site-title { font-size: 2.5rem; }
         }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="container">
-        <h1>BOGDANEWS </h1>
-    </div>
-</header>
+    <header>
+        <div class="site-title">BOGDAN TIMES</div>
+        <div class="sub-header">
+            <span>ВТОРНИК, 13 МАЯ, 2026</span>
+            <span>WORLD EDITION</span>
+            <span>VOL. I ... NO. 001</span>
+        </div>
+    </header>
 
-<main class="container">
-    <div id="news-container">
-        <p>СИНХРОНИЗАЦИЯ ПОТОКА ДАННЫХ...</p>
-    </div>
-</main>
+    <main>
+        <section id="news-container">
+            <!-- СЮДА ПРИДУТ НОВОСТИ -->
+        </section>
 
-<script>
-    fetch('news.json')
-        .then(res => res.json())
-        .then(data => {
-            const container = document.getElementById('news-container');
-            container.innerHTML = '';
-            
-            // НОВЫЕ НОВОСТИ СВЕРХУ
-            data.reverse().forEach((post, index) => {
-                const hasImage = post.image && post.image.trim() !== "";
-                
-                let html = `
-                <article class="post">
-                    ${hasImage ? `
-                    <div class="post-img-wrapper">
-                        <img src="img/${post.image}" class="post-image" alt="Visual">
-                    </div>` : ''}
-                    <div class="post-body">
-                        <span class="tag">ОБНОВЛЕНИЕ</span>
-                        <div class="post-date">${post.date}</div>
-                        <h2 class="post-title">${post.title}</h2>
-                        <p class="post-content">${post.content}</p>
-                    </div>
-                </article>`;
-                
-                container.innerHTML += html;
-            });
-        })
-        .catch(err => {
-            console.error(err);
-            document.getElementById('news-container').innerHTML = '<p>ОШИБКА ПОЛУЧЕНИЯ ДАННЫХ.</p>';
-        });
-</script>
+        <aside>
+            <h3 class="sidebar-title">ПОСЛЕДНИЕ СВОДКИ</h3>
+            <div id="sidebar-content">
+                <p style="font-size: 0.9rem;">СИСТЕМА РАБОТАЕТ В ШТАТНОМ РЕЖИМЕ. ВСЕ ДАННЫЕ ВЕРИФИЦИРОВАНЫ.</p>
+            </div>
+        </aside>
+    </main>
 
+    <footer>
+        <p>© 2026 BOGDAN MEDIA GROUP. ВСЕ ПРАВА ЗАЩИЩЕНЫ. ИСПОЛЬЗОВАНИЕ МАТЕРИАЛОВ ТОЛЬКО С РАЗРЕШЕНИЯ АДМИНИСТРАЦИИ.</p>
+    </footer>
+
+    <script>
+        async function loadNews() {
+            try {
+                const response = await fetch('news.json');
+                const news = await response.json();
+                const container = document.getElementById('news-container');
+
+                news.reverse().forEach((item, index) => {
+                    const article = document.createElement('article');
+                    article.className = 'news-article';
+
+                    let imageHtml = item.image ? 
+                        `<div class="news-image-container"><img src="${item.image}" class="news-image" alt="media"></div>` : '';
+
+                    article.innerHTML = `
+                        <span class="category">${index === 0 ? 'ГЛАВНОЕ' : 'НОВОСТИ'}</span>
+                        <h2 class="news-title">${item.title}</h2>
+                        <div class="news-meta">ОПУБЛИКОВАНО: ${item.date} // АВТОР: MISTER POINT</div>
+                        <div class="news-content">${item.content}</div>
+                        ${imageHtml}
+                    `;
+                    container.appendChild(article);
+                });
+            } catch (error) {
+                console.error("ОШИБКА ЗАГРУЗКИ НОВОСТЕЙ:", error);
+            }
+        }
+        loadNews();
+    </script>
 </body>
 </html>
