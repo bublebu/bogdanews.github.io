@@ -130,15 +130,14 @@
 
         let currentUser = null;
 
-        // --- МОДУЛЬ ПРЕДЛОЖКИ ЧЕРЕЗ БАЗУ (БЕЗОПАСНО) ---
         window.sendToTelegram = async () => {
             if (!currentUser) {
                 alert("КТО ВЫ? СНАЧАЛА АВТОРИЗУЙТЕСЬ.");
                 return;
             }
 
-            const title = document.getElementById('prop-title').value;
-            const text = document.getElementById('prop-text').value;
+            const title = document.getElementById('prop-title').value.trim();
+            const text = document.getElementById('prop-text').value.trim();
 
             if (!title || !text) {
                 alert("ЗАПОЛНИТЕ ВСЕ ПОЛЯ.");
@@ -146,7 +145,6 @@
             }
 
             try {
-                // ПИШЕМ В ТАБЛИЦУ, ТРИГГЕР SUPABASE ОТПРАВИТ В ТГ
                 const { error } = await sbClient
                     .from('suggestions')
                     .insert([{ 
@@ -156,24 +154,23 @@
                     }]);
 
                 if (!error) {
-                    alert("ПРИНЯТО. ЖДИТЕ ПРОВЕРКИ В ТЕЛЕГРАМЕ.");
+                    alert("ПРИНЯТО! ПРОВЕРЯЙ ТЕЛЕГРАМ.");
                     document.getElementById('prop-title').value = '';
                     document.getElementById('prop-text').value = '';
                 } else {
-                    alert("ОШИБКА ОТПРАВКИ: " + error.message);
+                    // Если триггер вернул NULL (из-за бана), это может вызвать ошибку
+                    alert("ОШИБКА: ДОСТУП ОГРАНИЧЕН ИЛИ СБОЙ БАЗЫ.");
                 }
             } catch (err) {
-                alert("ОШИБКА СОЕДИНЕНИЯ.");
+                alert("ОШИБКА ПОДКЛЮЧЕНИЯ.");
             }
         };
 
         window.signInWithGoogle = async () => {
-            try {
-                await sbClient.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: { redirectTo: 'https://bublebu.github.io/bogdanews/' }
-                });
-            } catch (e) { console.error(e); }
+            await sbClient.auth.signInWithOAuth({
+                provider: 'google',
+                options: { redirectTo: window.location.origin + window.location.pathname }
+            });
         };
 
         window.signOut = async () => {
@@ -182,10 +179,7 @@
         };
 
         window.handleReaction = async (id, field, current) => {
-            if (!currentUser) { 
-                alert("ВХОД ВОСПРЕЩЕН. НУЖНА РЕГИСТРАЦИЯ."); 
-                return; 
-            }
+            if (!currentUser) { alert("НУЖНА РЕГИСТРАЦИЯ."); return; }
             const key = 'reacted_' + id;
             if (localStorage.getItem(key)) return;
 
@@ -199,84 +193,45 @@
         async function checkUser() {
             const { data: { user } } = await sbClient.auth.getUser();
             currentUser = user;
-            const unauthView = document.getElementById('unauth-view');
-            const authView = document.getElementById('auth-view');
-            
             if (user) {
-                unauthView.style.display = 'none';
-                authView.style.display = 'block';
+                document.getElementById('unauth-view').style.display = 'none';
+                document.getElementById('auth-view').style.display = 'block';
                 document.getElementById('user-email').innerText = user.email.split('@')[0].toUpperCase();
-            } else {
-                unauthView.style.display = 'block';
-                authView.style.display = 'none';
             }
-        }
-
-        function formatDate(isoString) {
-            if (!isoString) return "ВНЕ ВРЕМЕНИ";
-            const date = new Date(isoString);
-            return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
         }
 
         async function loadNews(countView = true) {
             const { data, error } = await sbClient.from('news').select('*').order('id', { ascending: false });
             const container = document.getElementById('news-container');
-            
-            if (error) {
-                container.innerHTML = `<div style="color:red">ОШИБКА БАЗЫ</div>`;
-                return;
-            }
+            if (error) return;
 
-            if (!data || data.length === 0) {
-                container.innerHTML = `<div>НОВОСТЕЙ НЕТ</div>`;
-                return;
-            }
-
-            container.innerHTML = data.map((n, i) => {
-                const hasReacted = localStorage.getItem('reacted_' + n.id);
-                return `
+            container.innerHTML = data.map((n, i) => `
                 <article class="news-article">
                     <div class="article-meta">
-                        <span class="pub-date">${formatDate(n.created_at)}</span>
+                        <span class="pub-date">${new Date(n.created_at).toLocaleDateString()}</span>
                         <span>ГЛАЗ: ${n.views || 0}</span>
                     </div>
                     <span class="category-tag">${i === 0 ? 'СВЕЖАК' : 'АРХИВ'}</span>
-                    <h2 class="news-title">${n.title || 'БЕЗ НАЗВАНИЯ'}</h2>
-                    <div class="news-content">${n.content || '...'}</div>
+                    <h2 class="news-title">${n.title}</h2>
+                    <div class="news-content">${n.content}</div>
                     <div class="reactions">
-                        <button class="react-btn" ${hasReacted ? 'disabled' : ''} onclick="window.handleReaction(${n.id}, 'likes', ${n.likes || 0})">👍 (${n.likes || 0})</button>
-                        <button class="react-btn" ${hasReacted ? 'disabled' : ''} onclick="window.handleReaction(${n.id}, 'dislikes', ${n.dislikes || 0})">👎 (${n.dislikes || 0})</button>
+                        <button class="react-btn" onclick="window.handleReaction(${n.id}, 'likes', ${n.likes})">👍 ${n.likes}</button>
                     </div>
                 </article>
-            `}).join('');
-
-            if (countView) {
-                for (const n of data) {
-                    const key = 'v_' + n.id;
-                    if (!sessionStorage.getItem(key)) {
-                        await sbClient.from('news').update({ views: (Number(n.views) || 0) + 1 }).eq('id', n.id);
-                        sessionStorage.setItem(key, 'true');
-                    }
-                }
-            }
+            `).join('');
         }
 
         document.getElementById('btn-login').onclick = window.signInWithGoogle;
         document.getElementById('btn-logout').onclick = window.signOut;
         document.getElementById('live-date').innerText = new Date().toLocaleDateString('ru-RU', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
 
-        function updateRates() {
-            document.getElementById('exchange-val').innerText = `1 РУБ = ${(Math.random() * 99).toFixed(2)} USD`;
-        }
-
         async function init() {
             await checkUser();
             await loadNews();
-            updateRates();
-            setInterval(updateRates, 5000);
-            sbClient.auth.onAuthStateChange(() => checkUser());
+            setInterval(() => {
+                document.getElementById('exchange-val').innerText = `1 РУБ = ${(Math.random() * 99).toFixed(2)} USD`;
+            }, 5000);
         }
-
         init();
     </script>
 </body>
