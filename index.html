@@ -30,8 +30,9 @@
         .news-content { column-count: 2; column-gap: 20px; text-align: justify; font-size: 1rem; color: #222; }
 
         .reactions { margin-top: 15px; display: flex; gap: 15px; align-items: center; }
-        .react-btn { background: #fff; border: 1px solid var(--text-dark); cursor: pointer; padding: 5px 12px; font-weight: bold; font-family: 'Roboto', sans-serif; }
-        .react-btn:hover { background: var(--text-dark); color: #fff; }
+        .react-btn { background: #fff; border: 1px solid var(--text-dark); cursor: pointer; padding: 5px 12px; font-weight: bold; font-family: 'Roboto', sans-serif; transition: 0.2s; }
+        .react-btn:hover:not(:disabled) { background: var(--text-dark); color: #fff; }
+        .react-btn:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
         .stat-view { font-size: 0.9rem; color: #666; font-weight: bold; }
 
         aside { border-left: 2px solid var(--text-dark); padding-left: 25px; }
@@ -83,8 +84,14 @@
         }
 
         async function handleReaction(id, field, current) {
+            const key = 'reacted_' + field + '_' + id;
+            if (localStorage.getItem(key)) return; // Блокируем на уровне кода
+
             const { error } = await sbClient.from('news').update({ [field]: (Number(current) || 0) + 1 }).eq('id', id);
-            if (!error) loadNews(false); 
+            if (!error) {
+                localStorage.setItem(key, 'true');
+                loadNews(false); 
+            }
         }
 
         async function loadNews(countView = true) {
@@ -92,18 +99,22 @@
             const container = document.getElementById('news-container');
             if (error) return;
 
-            container.innerHTML = data.map((n, i) => `
+            container.innerHTML = data.map((n, i) => {
+                const liked = localStorage.getItem('reacted_likes_' + n.id);
+                const disliked = localStorage.getItem('reacted_dislikes_' + n.id);
+                
+                return `
                 <article class="news-article">
                     <span class="category">${i === 0 ? 'ГЛАВНАЯ ТЕМА' : 'ИНСАЙД'}</span>
                     <h2 class="news-title">${n.title || 'БЕЗ НАЗВАНИЯ'}</h2>
                     <div class="news-content">${n.content || '...'}</div>
                     <div class="reactions">
                         <span class="stat-view">👁 ${n.views || 0}</span>
-                        <button class="react-btn" onclick="handleReaction(${n.id}, 'likes', ${n.likes || 0})">👍 ${n.likes || 0}</button>
-                        <button class="react-btn" onclick="handleReaction(${n.id}, 'dislikes', ${n.dislikes || 0})">👎 ${n.dislikes || 0}</button>
+                        <button class="react-btn" ${liked ? 'disabled' : ''} onclick="handleReaction(${n.id}, 'likes', ${n.likes || 0})">👍 ${n.likes || 0}</button>
+                        <button class="react-btn" ${disliked ? 'disabled' : ''} onclick="handleReaction(${n.id}, 'dislikes', ${n.dislikes || 0})">👎 ${n.dislikes || 0}</button>
                     </div>
                 </article>
-            `).join('');
+            `}).join('');
 
             if (countView) {
                 let updatedAny = false;
@@ -115,7 +126,7 @@
                         updatedAny = true;
                     }
                 }
-                if (updatedAny) loadNews(false); // Перерисовываем с новыми цифрами
+                if (updatedAny) loadNews(false);
             }
         }
 
