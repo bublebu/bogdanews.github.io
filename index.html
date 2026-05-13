@@ -8,11 +8,11 @@
     <!-- ПОДТВЕРЖДЕНИЕ ГУГЛ -->
     <meta name="google-site-verification" content="ii3A3TpdlwaiuA9tNgDsQ4Ld_0HsKZJVB_KH6YPKzIk" />
     
-    <!-- ИКОНКИ (НЕ ЗАБУДЬ ЗАЛИТЬ ФАЙЛ favicon.png В РЕПОЗИТОРИЙ) -->
+    <!-- ИКОНКИ -->
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="apple-touch-icon" href="favicon.png">
 
-    <!-- SEO И КОРПОРАТИВНЫЕ МЕТА-ТЕГИ -->
+    <!-- SEO -->
     <meta name="description" content="Официальный сайт BOGDANEWS. Актуальные новости, курьезные происшествия, биржа BOGDAN и финансовая сводка.">
     <meta name="keywords" content="bogdanews, богданьюс, богдан ньюс, новости богдан, bublebu github">
     <meta property="og:title" content="BOGDANEWS — ИНФОРМАЦИОННОЕ АГЕНТСТВО">
@@ -30,130 +30,29 @@
             --secondary-text: #444; 
         }
         
-        body { 
-            background-color: var(--main-bg); 
-            color: var(--text-dark); 
-            font-family: 'Roboto', sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            line-height: 1.4;
-        }
+        body { background-color: var(--main-bg); color: var(--text-dark); font-family: 'Roboto', sans-serif; margin: 0; padding: 0; line-height: 1.4; }
+        header { border-bottom: 5px double var(--text-dark); margin: 0 auto; max-width: 1200px; padding: 30px 0; text-align: center; }
+        .site-title { font-family: 'Playfair Display', serif; font-size: 4.5rem; margin: 0; text-transform: uppercase; letter-spacing: -2px; line-height: 0.9; }
+        .sub-header { border-top: 2px solid var(--text-dark); border-bottom: 2px solid var(--text-dark); margin-top: 15px; padding: 8px 0; font-size: 0.9rem; text-transform: uppercase; font-weight: 700; display: flex; justify-content: space-between; }
 
-        header { 
-            border-bottom: 5px double var(--text-dark); 
-            margin: 0 auto; 
-            max-width: 1200px; 
-            padding: 30px 0; 
-            text-align: center; 
-        }
-        
-        .site-title { 
-            font-family: 'Playfair Display', serif; 
-            font-size: 4.5rem; 
-            margin: 0; 
-            text-transform: uppercase; 
-            letter-spacing: -2px; 
-            line-height: 0.9;
-        }
+        main { max-width: 1200px; margin: 30px auto; display: grid; grid-template-columns: 3fr 1fr; gap: 50px; padding: 0 20px; }
+        .news-article { border-bottom: 1px solid #ccc; padding-bottom: 30px; margin-bottom: 30px; }
+        .category { background: var(--text-dark); color: #fff; padding: 2px 8px; text-transform: uppercase; font-size: 0.7rem; margin-bottom: 10px; display: inline-block; }
+        .news-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; line-height: 1.1; margin: 10px 0; font-weight: 700; }
+        .news-content { column-count: 2; column-gap: 20px; text-align: justify; font-size: 1rem; color: #222; }
 
-        .sub-header { 
-            border-top: 2px solid var(--text-dark); 
-            border-bottom: 2px solid var(--text-dark); 
-            margin-top: 15px; 
-            padding: 8px 0; 
-            font-size: 0.9rem; 
-            text-transform: uppercase; 
-            font-weight: 700; 
-            display: flex; 
-            justify-content: space-between; 
-        }
+        /* КНОПКИ РЕАКЦИЙ */
+        .reactions { margin-top: 15px; display: flex; gap: 15px; align-items: center; }
+        .react-btn { background: none; border: 1px solid var(--text-dark); cursor: pointer; padding: 5px 10px; font-weight: bold; font-family: 'Roboto', sans-serif; }
+        .react-btn:hover { background: var(--text-dark); color: #fff; }
+        .stat-view { font-size: 0.8rem; color: #666; font-weight: bold; }
 
-        main { 
-            max-width: 1200px; 
-            margin: 30px auto; 
-            display: grid; 
-            grid-template-columns: 3fr 1fr; 
-            gap: 50px; 
-            padding: 0 20px; 
-        }
-
-        .news-article { 
-            border-bottom: 1px solid #ccc; 
-            padding-bottom: 30px; 
-            margin-bottom: 30px; 
-        }
-        
-        .category { 
-            background: var(--text-dark);
-            color: #fff;
-            padding: 2px 8px;
-            text-transform: uppercase; 
-            font-size: 0.7rem; 
-            margin-bottom: 10px; 
-            display: inline-block; 
-        }
-        
-        .news-title { 
-            font-family: 'Playfair Display', serif; 
-            font-size: 2.5rem; 
-            line-height: 1.1; 
-            margin: 10px 0; 
-            font-weight: 700;
-        }
-
-        .news-content { 
-            column-count: 2; 
-            column-gap: 20px;
-            text-align: justify;
-            font-size: 1rem;
-            color: #222;
-        }
-
-        aside { 
-            border-left: 2px solid var(--text-dark); 
-            padding-left: 25px; 
-        }
-
-        .sidebar-box {
-            background: #fff;
-            border: 1px solid var(--text-dark);
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 5px 5px 0px var(--text-dark);
-        }
-
-        .sidebar-title { 
-            font-family: 'Playfair Display', serif; 
-            font-size: 1.5rem;
-            border-bottom: 3px solid var(--accent-red); 
-            padding-bottom: 5px; 
-            margin: 0 0 15px 0; 
-            text-transform: uppercase;
-        }
-
-        .exchange-rate {
-            font-family: monospace;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--accent-red);
-            text-align: center;
-            display: block;
-            padding: 10px;
-            border: 1px dashed #ccc;
-        }
-
-        .staff-list {
-            font-size: 0.8rem;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .staff-list li {
-            margin-bottom: 5px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 2px;
-        }
+        aside { border-left: 2px solid var(--text-dark); padding-left: 25px; }
+        .sidebar-box { background: #fff; border: 1px solid var(--text-dark); padding: 15px; margin-bottom: 20px; box-shadow: 5px 5px 0px var(--text-dark); }
+        .sidebar-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; border-bottom: 3px solid var(--accent-red); padding-bottom: 5px; margin: 0 0 15px 0; text-transform: uppercase; }
+        .exchange-rate { font-family: monospace; font-size: 1.2rem; font-weight: bold; color: var(--accent-red); text-align: center; display: block; padding: 10px; border: 1px dashed #ccc; }
+        .staff-list { font-size: 0.8rem; list-style: none; padding: 0; margin: 0; }
+        .staff-list li { margin-bottom: 5px; border-bottom: 1px solid #eee; padding-bottom: 2px; }
 
         @media (max-width: 900px) {
             main { grid-template-columns: 1fr; }
@@ -208,34 +107,45 @@
         var SUPABASE_KEY = 'sb_publishable_ZKaIa2ygxMrvn6M8urGE1A_1M4PR3jQ';
         var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        async function updateReaction(id, column, current) {
+            const { error } = await supabase.from('news').update({ [column]: (current || 0) + 1 }).eq('id', id);
+            if (!error) getNews();
+        }
+
+        async function getNews() {
+            var { data, error } = await supabase.from('news').select('*').order('id', { ascending: false });
+            var container = document.getElementById('news-container');
+            if (error) { container.innerHTML = "ОШИБКА: " + error.message; return; }
+            
+            container.innerHTML = data.map((n, i) => `
+                <article class="news-article">
+                    <span class="category">${i === 0 ? 'ГЛАВНАЯ ТЕМА' : 'ИНСАЙД'}</span>
+                    <h2 class="news-title">${n.title || 'БЕЗ НАЗВАНИЯ'}</h2>
+                    <div class="news-meta">2026 // BOGDAN REPORT</div>
+                    <div class="news-content">${n.content || 'ИНФОРМАЦИЯ УДАЛЕНА ЦЕНЗУРОЙ.'}</div>
+                    <div class="reactions">
+                        <span class="stat-view">👁 ${n.views || 0}</span>
+                        <button class="react-btn" onclick="updateReaction(${n.id}, 'likes', ${n.likes})">👍 ${n.likes || 0}</button>
+                        <button class="react-btn" onclick="updateReaction(${n.id}, 'dislikes', ${n.dislikes})">👎 ${n.dislikes || 0}</button>
+                    </div>
+                </article>
+            `).join('');
+
+            // Авто-просмотр
+            data.forEach(async (n) => {
+                await supabase.from('news').update({ views: (n.views || 0) + 1 }).eq('id', n.id);
+            });
+        }
+
         function updateExchange() {
             const val = (Math.random() * (1000 - 1) + 1).toFixed(2);
             document.getElementById('exchange-val').innerText = `1 РУБЛЬ = ${val} $`;
         }
 
-        (function init() {
-            var now = new Date();
-            document.getElementById('live-date').innerText = now.toLocaleDateString('ru-RU').toUpperCase();
-            
-            async function getNews() {
-                var { data, error } = await supabase.from('news').select('*').order('id', { ascending: false });
-                var container = document.getElementById('news-container');
-                if (error) { container.innerHTML = "ОШИБКА ПОДКЛЮЧЕНИЯ К СЕТИ: " + error.message; return; }
-                
-                container.innerHTML = data.map((n, i) => `
-                    <article class="news-article">
-                        <span class="category">${i === 0 ? 'ГЛАВНАЯ ТЕМА' : 'ИНСАЙД'}</span>
-                        <h2 class="news-title">${n.title || 'БЕЗ НАЗВАНИЯ'}</h2>
-                        <div class="news-meta">2026 // BOGDAN REPORT</div>
-                        <div class="news-content">${n.content || 'ИНФОРМАЦИЯ УДАЛЕНА ЦЕНЗУРОЙ.'}</div>
-                    </article>
-                `).join('');
-            }
-
-            getNews();
-            updateExchange();
-            setInterval(updateExchange, 3000);
-        })();
+        document.getElementById('live-date').innerText = new Date().toLocaleDateString('ru-RU').toUpperCase();
+        getNews();
+        updateExchange();
+        setInterval(updateExchange, 3000);
     </script>
 </body>
 </html>
