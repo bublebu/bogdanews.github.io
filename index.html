@@ -5,66 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BOGDANEWS</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <!-- ПОДКЛЮЧАЕМ СКРИПТ SUPABASE -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root {
-            --main-bg: #ffffff;
-            --text-dark: #1a1a1a;
-            --accent-red: #c00;
-            --border-gray: #e2e2e2;
-            --secondary-text: #666;
-        }
-
+        :root { --main-bg: #ffffff; --text-dark: #1a1a1a; --accent-red: #c00; --border-gray: #e2e2e2; --secondary-text: #666; }
         body { background-color: var(--main-bg); color: var(--text-dark); font-family: 'Roboto', sans-serif; margin: 0; padding: 0; }
-
         header { border-bottom: 4px double var(--text-dark); margin: 0 auto; max-width: 1200px; padding: 20px 0; text-align: center; }
         .site-title { font-family: 'Playfair Display', serif; font-size: 3.5rem; margin: 0; text-transform: uppercase; letter-spacing: -1px; }
         .sub-header { border-top: 1px solid var(--border-gray); border-bottom: 1px solid var(--border-gray); margin-top: 10px; padding: 5px 0; font-size: 0.8rem; text-transform: uppercase; font-weight: bold; display: flex; justify-content: space-between; }
-
         main { max-width: 1200px; margin: 30px auto; display: grid; grid-template-columns: 2fr 1fr; gap: 40px; padding: 0 20px; }
-        
         .news-article { border-bottom: 1px solid var(--border-gray); padding-bottom: 25px; margin-bottom: 25px; }
         .category { color: var(--accent-red); font-weight: bold; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 8px; display: block; }
         .news-title { font-family: 'Playfair Display', serif; font-size: 2rem; line-height: 1.2; margin: 0 0 15px 0; }
         .news-meta { font-size: 0.85rem; color: var(--secondary-text); margin-bottom: 15px; }
         .news-content { line-height: 1.6; color: #333; font-size: 1.05rem; white-space: pre-wrap; }
-
         aside { border-left: 1px solid var(--border-gray); padding-left: 20px; }
         .sidebar-title { font-family: 'Playfair Display', serif; border-bottom: 2px solid var(--text-dark); padding-bottom: 5px; margin-bottom: 20px; }
-
-        .snake-btn {
-            background: var(--text-dark);
-            color: #fff;
-            border: none;
-            padding: 10px 15px;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            cursor: pointer;
-            font-weight: bold;
-            letter-spacing: 1px;
-            transition: 0.3s;
-        }
+        .snake-btn { background: var(--text-dark); color: #fff; border: none; padding: 10px 15px; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .snake-btn:hover { background: var(--accent-red); }
-
-        #game-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 1000;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+        #game-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
         canvas { border: 2px solid #fff; background: #000; }
         .game-info { color: #fff; font-family: monospace; margin-bottom: 10px; }
-
         footer { background: #f9f9f9; border-top: 1px solid var(--border-gray); padding: 40px 0; text-align: center; font-size: 0.8rem; color: var(--secondary-text); margin-top: 50px; }
     </style>
 </head>
 <body>
-
     <header>
         <div class="site-title">BOGDANEWS</div>
         <div class="sub-header">
@@ -73,35 +37,26 @@
             <span>VOL. I ... NO. 001</span>
         </div>
     </header>
-
     <main>
-        <section id="news-container">ПОДКЛЮЧЕНИЕ К СЕРВЕРУ...</section>
-
+        <section id="news-container">ПОДКЛЮЧЕНИЕ...</section>
         <aside>
             <h3 class="sidebar-title">ТЕХ. ОТДЕЛ</h3>
-            <p style="font-size: 0.9rem; margin-bottom: 20px;">БАЗА ДАННЫХ: SUPABASE_CLOUD</p>
-            <button class="snake-btn" onclick="startSnake()">ЗАПУСТИТЬ SNAKE_OS</button>
+            <p style="font-size: 0.9rem; margin-bottom: 20px;">БАЗА: SUPABASE</p>
+            <button class="snake-btn" onclick="startSnake()">SNAKE_OS</button>
         </aside>
     </main>
-
     <div id="game-overlay">
-        <div class="game-info">УПРАВЛЕНИЕ: WASD | SCORE: <span id="score">0</span></div>
+        <div class="game-info">WASD | SCORE: <span id="score">0</span></div>
         <canvas id="snakeGame" width="400" height="400"></canvas>
-        <button class="snake-btn" style="margin-top: 20px;" onclick="stopSnake()">ВЫХОД В ГАЗЕТУ</button>
+        <button class="snake-btn" style="margin-top: 20px;" onclick="stopSnake()">ВЫХОД</button>
     </div>
-
-    <footer>
-        <p>© 2026 BOGDAN MEDIA GROUP // MISTER BOGDAN</p>
-    </footer>
-
+    <footer><p>© 2026 BOGDAN MEDIA GROUP</p></footer>
     <script>
-        // --- КОНФИГУРАЦИЯ SUPABASE ---
-        // ПЕРЕМЕННАЯ ОБЪЯВЛЯЕТСЯ ТОЛЬКО ОДИН РАЗ (ИСПРАВЛЕНИЕ ОШИБКИ ИЗ image_2ad103.png)
+        // ЕДИНСТВЕННОЕ ОБЪЯВЛЕНИЕ SUPABASE
         const SUPABASE_URL = 'https://lqnluvjvghxoiqknfixp.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_ZKaIa2ygxMrvn6M8urGE1A_1M4PR3jQ';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // 1. ЖИВАЯ ДАТА
         function updateDate() {
             const now = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -109,100 +64,58 @@
         }
         updateDate();
 
-        // 2. ЗАГРУЗКА НОВОСТЕЙ
         async function loadNews() {
             const container = document.getElementById('news-container');
-            
-            // Запрос данных из таблицы news (как в image_2adc20.png)
-            let { data: news, error } = await supabase
-                .from('news')
-                .select('*')
-                .order('id', { ascending: false });
-
-            if (error) {
-                container.innerHTML = "ОШИБКА БАЗЫ: " + error.message;
-                console.error("ОШИБКА:", error);
-                return;
-            }
-
-            if (!news || news.length === 0) {
-                container.innerHTML = "НОВОСТЕЙ ПОКА НЕТ. ДОБАВЬТЕ ИХ В ПАНЕЛИ SUPABASE.";
-                return;
-            }
-
+            let { data: news, error } = await supabase.from('news').select('*').order('id', { ascending: false });
+            if (error) { container.innerHTML = "ОШИБКА: " + error.message; return; }
+            if (!news || news.length === 0) { container.innerHTML = "НОВОСТЕЙ НЕТ."; return; }
             container.innerHTML = '';
             news.forEach((item, index) => {
                 const art = document.createElement('article');
                 art.className = 'news-article';
-                
-                // Берем заголовок и контент из твоей базы (image_2adc20.png)
-                const displayDate = item.date || new Date().toLocaleDateString('ru-RU');
-
                 art.innerHTML = `
                     <span class="category">${index === 0 ? 'ГЛАВНОЕ' : 'СВОДКА'}</span>
-                    <h2 class="news-title">${item.title || 'Без заголовка'}</h2>
-                    <div class="news-meta">${displayDate} // АВТОР: MISTER BOGDAN</div>
-                    <div class="news-content">${item.content || 'Нет содержания'}</div>
-                `;
+                    <h2 class="news-title">${item.title || '---'}</h2>
+                    <div class="news-meta">${new Date().toLocaleDateString('ru-RU')} // MISTER BOGDAN</div>
+                    <div class="news-content">${item.content || ''}</div>`;
                 container.appendChild(art);
             });
         }
         loadNews();
 
-        // --- ЗМЕЙКА (SNAKE_OS) ---
         const canvas = document.getElementById('snakeGame');
         const ctx = canvas.getContext('2d');
-        const scoreEl = document.getElementById('score');
         let snake, food, dx, dy, score, gameRunning, lastTime;
         const box = 20;
 
         function startSnake() {
             document.getElementById('game-overlay').style.display = 'flex';
-            snake = [{x: 10 * box, y: 10 * box}];
+            snake = [{x: 10*box, y: 10*box}];
             food = {x: Math.floor(Math.random()*20)*box, y: Math.floor(Math.random()*20)*box};
-            dx = box; dy = 0; score = 0;
-            scoreEl.innerText = score;
-            gameRunning = true;
-            lastTime = performance.now();
-            requestAnimationFrame(gameLoop);
+            dx = box; dy = 0; score = 0; document.getElementById('score').innerText = score;
+            gameRunning = true; lastTime = performance.now(); requestAnimationFrame(gameLoop);
         }
-
-        function stopSnake() {
-            gameRunning = false;
-            document.getElementById('game-overlay').style.display = 'none';
-        }
-
+        function stopSnake() { gameRunning = false; document.getElementById('game-overlay').style.display = 'none'; }
         document.addEventListener('keydown', e => {
-            if (!gameRunning) return;
-            const key = e.key.toLowerCase();
-            if (key === 'w' && dy === 0) { dx = 0; dy = -box; }
-            if (key === 's' && dy === 0) { dx = 0; dy = box; }
-            if (key === 'a' && dx === 0) { dx = -box; dy = 0; }
-            if (key === 'd' && dx === 0) { dx = box; dy = 0; }
+            if(!gameRunning) return;
+            const k = e.key.toLowerCase();
+            if(k === 'w' && dy === 0) { dx = 0; dy = -box; }
+            if(k === 's' && dy === 0) { dx = 0; dy = box; }
+            if(k === 'a' && dx === 0) { dx = -box; dy = 0; }
+            if(k === 'd' && dx === 0) { dx = box; dy = 0; }
         });
-
-        function gameLoop(currentTime) {
-            if (!gameRunning) return;
+        function gameLoop(t) {
+            if(!gameRunning) return;
             requestAnimationFrame(gameLoop);
-            const elapsed = currentTime - lastTime;
-            if (elapsed > 100) {
-                lastTime = currentTime - (elapsed % 100);
+            if(t - lastTime > 100) {
+                lastTime = t;
                 const head = {x: snake[0].x + dx, y: snake[0].y + dy};
-                if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400 || 
-                    snake.some(s => s.x === head.x && s.y === head.y)) {
-                    alert("GAME OVER! SCORE: " + score);
-                    startSnake();
-                    return;
-                }
+                if(head.x<0||head.x>=400||head.y<0||head.y>=400||snake.some(s=>s.x===head.x&&s.y===head.y)) { startSnake(); return; }
                 snake.unshift(head);
-                if (head.x === food.x && head.y === food.y) {
-                    score++; scoreEl.innerText = score;
-                    food = {x: Math.floor(Math.random()*20)*box, y: Math.floor(Math.random()*20)*box};
-                } else { snake.pop(); }
+                if(head.x===food.x && head.y===food.y) { score++; document.getElementById('score').innerText = score; food = {x: Math.floor(Math.random()*20)*box, y: Math.floor(Math.random()*20)*box}; } else { snake.pop(); }
                 ctx.fillStyle = 'black'; ctx.fillRect(0,0,400,400);
                 ctx.fillStyle = 'red'; ctx.fillRect(food.x, food.y, box, box);
-                ctx.fillStyle = 'lime';
-                snake.forEach(s => ctx.fillRect(s.x, s.y, box-2, box-2));
+                ctx.fillStyle = 'lime'; snake.forEach(s=>ctx.fillRect(s.x, s.y, box-2, box-2));
             }
         }
     </script>
