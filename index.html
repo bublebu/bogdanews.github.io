@@ -16,7 +16,6 @@
             --main-bg: #f4f1ea; 
             --text-dark: #1a1a1a; 
             --accent-red: #c00; 
-            --secondary-text: #444; 
         }
         
         body { background-color: var(--main-bg); color: var(--text-dark); font-family: 'Roboto', sans-serif; margin: 0; padding: 0; line-height: 1.4; }
@@ -31,9 +30,9 @@
         .news-content { column-count: 2; column-gap: 20px; text-align: justify; font-size: 1rem; color: #222; }
 
         .reactions { margin-top: 15px; display: flex; gap: 15px; align-items: center; }
-        .react-btn { background: #fff; border: 1px solid var(--text-dark); cursor: pointer; padding: 5px 12px; font-weight: bold; transition: 0.2s; }
+        .react-btn { background: #fff; border: 1px solid var(--text-dark); cursor: pointer; padding: 5px 12px; font-weight: bold; font-family: 'Roboto', sans-serif; }
         .react-btn:hover { background: var(--text-dark); color: #fff; }
-        .stat-view { font-size: 0.9rem; color: #666; font-weight: bold; font-family: monospace; }
+        .stat-view { font-size: 0.9rem; color: #666; font-weight: bold; }
 
         aside { border-left: 2px solid var(--text-dark); padding-left: 25px; }
         .sidebar-box { background: #fff; border: 1px solid var(--text-dark); padding: 15px; margin-bottom: 20px; box-shadow: 5px 5px 0px var(--text-dark); }
@@ -58,7 +57,7 @@
     </header>
     
     <main>
-        <section id="news-container">ЗАГРУЗКА ДАННЫХ...</section>
+        <section id="news-container">ОЖИДАНИЕ СВОДКИ...</section>
         
         <aside>
             <div class="sidebar-box">
@@ -69,66 +68,64 @@
                 <h3 class="sidebar-title">РЕДАКЦИЯ</h3>
                 <div style="font-size: 0.8rem;">
                     <strong>ГЛАВНЫЙ:</strong> БОГДАН<br>
-                    <strong>АРТЕМА:</strong> НЕТ
+                    <strong>ТЕХПОДДЕРЖКА:</strong> АРТЕМА НЕТ
                 </div>
-            </div>
-            <div class="sidebar-box">
-                <strong>РЕКЛАМА:</strong> <a href="https://t.me/eblantale" style="color: var(--accent-red); text-decoration: none;">EBLANTALE</a>
             </div>
         </aside>
     </main>
 
     <script>
-        const SUPABASE_URL = 'https://lqnluvjvghxoiqknfixp.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_ZKaIa2ygxMrvn6M8urGE1A_1M4PR3jQ';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        async function updateStat(id, type, current) {
-            const newVal = (parseInt(current) || 0) + 1;
-            const { error } = await supabase.from('news').update({ [type]: newVal }).eq('id', id);
-            if (!error) getNews(false); // Обновляем без накрутки просмотра
+        // ИСПОЛЬЗУЕМ var ЧТОБЫ ИЗБЕЖАТЬ ОШИБОК ПЕРЕОБЪЯВЛЕНИЯ ПРИ ПЕРЕЗАГРУЗКЕ СКРИПТА
+        var S_URL = 'https://lqnluvjvghxoiqknfixp.supabase.co';
+        var S_KEY = 'sb_publishable_ZKaIa2ygxMrvn6M8urGE1A_1M4PR3jQ';
+        
+        // Проверяем, не инициализирован ли уже клиент
+        if (typeof sbClient === 'undefined') {
+            var sbClient = window.supabase.createClient(S_URL, S_KEY);
         }
 
-        async function getNews(isInitialLoad = true) {
-            const { data, error } = await supabase.from('news').select('*').order('id', { ascending: false });
+        async function handleReaction(id, field, current) {
+            const { error } = await sbClient.from('news').update({ [field]: (current || 0) + 1 }).eq('id', id);
+            if (!error) loadNews(false); 
+        }
+
+        async function loadNews(countView = true) {
+            const { data, error } = await sbClient.from('news').select('*').order('id', { ascending: false });
             const container = document.getElementById('news-container');
             if (error) return;
 
             container.innerHTML = data.map((n, i) => `
                 <article class="news-article">
-                    <span class="category">${i === 0 ? 'ГЛАВНОЕ' : 'ИНСАЙД'}</span>
+                    <span class="category">${i === 0 ? 'ГЛАВНАЯ ТЕМА' : 'ИНСАЙД'}</span>
                     <h2 class="news-title">${n.title || 'БЕЗ НАЗВАНИЯ'}</h2>
                     <div class="news-content">${n.content || '...'}</div>
                     <div class="reactions">
                         <span class="stat-view">👁 ${n.views || 0}</span>
-                        <button class="react-btn" onclick="updateStat(${n.id}, 'likes', ${n.likes || 0})">👍 ${n.likes || 0}</button>
-                        <button class="react-btn" onclick="updateReaction(${n.id}, 'dislikes', ${n.dislikes || 0})">👎 ${n.dislikes || 0}</button>
+                        <button class="react-btn" onclick="handleReaction(${n.id}, 'likes', ${n.likes || 0})">👍 ${n.likes || 0}</button>
+                        <button class="react-btn" onclick="handleReaction(${n.id}, 'dislikes', ${n.dislikes || 0})">👎 ${n.dislikes || 0}</button>
                     </div>
                 </article>
             `).join('');
 
-            if (isInitialLoad) {
+            if (countView) {
                 data.forEach(async (n) => {
-                    const viewed = localStorage.getItem('v_' + n.id);
-                    if (!viewed) {
-                        await supabase.from('news').update({ views: (n.views || 0) + 1 }).eq('id', n.id);
-                        localStorage.setItem('v_' + n.id, '1');
+                    const key = 'viewed_' + n.id;
+                    if (!localStorage.getItem(key)) {
+                        await sbClient.from('news').update({ views: (n.views || 0) + 1 }).eq('id', n.id);
+                        localStorage.setItem(key, 'true');
                     }
                 });
             }
         }
 
-        // ДУБЛИРУЮ ФУНКЦИЮ ДЛЯ ДИЗЛАЙКА (ЧТОБЫ В ОНЧЛИКЕ НЕ ПУТАТЬСЯ)
-        window.updateReaction = updateStat;
-
-        function updateExchange() {
-            document.getElementById('exchange-val').innerText = `1 РУБЛЬ = ${(Math.random() * 500).toFixed(2)} $`;
+        function updateRates() {
+            document.getElementById('exchange-val').innerText = `1 РУБЛЬ = ${(Math.random() * 800).toFixed(2)} $`;
         }
 
         document.getElementById('live-date').innerText = new Date().toLocaleDateString('ru-RU').toUpperCase();
-        getNews();
-        updateExchange();
-        setInterval(updateExchange, 3000);
+        loadNews();
+        updateRates();
+        setInterval(updateRates, 4000);
     </script>
 </body>
 </html>
