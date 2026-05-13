@@ -75,17 +75,15 @@
     </main>
 
     <script>
-        // ИСПОЛЬЗУЕМ var ЧТОБЫ ИЗБЕЖАТЬ ОШИБОК ПЕРЕОБЪЯВЛЕНИЯ ПРИ ПЕРЕЗАГРУЗКЕ СКРИПТА
         var S_URL = 'https://lqnluvjvghxoiqknfixp.supabase.co';
         var S_KEY = 'sb_publishable_ZKaIa2ygxMrvn6M8urGE1A_1M4PR3jQ';
         
-        // Проверяем, не инициализирован ли уже клиент
         if (typeof sbClient === 'undefined') {
             var sbClient = window.supabase.createClient(S_URL, S_KEY);
         }
 
         async function handleReaction(id, field, current) {
-            const { error } = await sbClient.from('news').update({ [field]: (current || 0) + 1 }).eq('id', id);
+            const { error } = await sbClient.from('news').update({ [field]: (Number(current) || 0) + 1 }).eq('id', id);
             if (!error) loadNews(false); 
         }
 
@@ -108,13 +106,16 @@
             `).join('');
 
             if (countView) {
-                data.forEach(async (n) => {
-                    const key = 'viewed_' + n.id;
-                    if (!localStorage.getItem(key)) {
-                        await sbClient.from('news').update({ views: (n.views || 0) + 1 }).eq('id', n.id);
-                        localStorage.setItem(key, 'true');
+                let updatedAny = false;
+                for (const n of data) {
+                    const key = 'v_' + n.id;
+                    if (!sessionStorage.getItem(key)) {
+                        await sbClient.from('news').update({ views: (Number(n.views) || 0) + 1 }).eq('id', n.id);
+                        sessionStorage.setItem(key, 'true');
+                        updatedAny = true;
                     }
-                });
+                }
+                if (updatedAny) loadNews(false); // Перерисовываем с новыми цифрами
             }
         }
 
