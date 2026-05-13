@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BOGDANEWS</title>
-<meta name="google-site-verification" content="ii3A3TpdlwaiuA9tNgDsQ4Ld_0HsKZJVB_KH6YPKzIk" />
-<meta name="description" content="Официальный сайт BOGDANEWS. Актуальные новости, курьезные происшествия, биржа BOGDAN и встроенная игра Змейка.">
-<meta name="keywords" content="bogdanews, богданьюс, богдан ньюс, новости богдан, bublebu github">
+    <meta name="google-site-verification" content="ii3A3TpdlwaiuA9tNgDsQ4Ld_0HsKZJVB_KH6YPKzIk" />
+    <meta name="description" content="Официальный сайт BOGDANEWS. Актуальные новости, курьезные происшествия, биржа BOGDAN и финансовая сводка.">
+    <meta name="keywords" content="bogdanews, богданьюс, богдан ньюс, новости богдан, bublebu github">
 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { 
-            --main-bg: #f4f1ea; /* ЦВЕТ СТАРОЙ БУМАГИ */
+            --main-bg: #f4f1ea; 
             --text-dark: #1a1a1a; 
             --accent-red: #c00; 
             --border-gray: #333; 
@@ -28,7 +28,6 @@
             line-height: 1.4;
         }
 
-        /* УЛУЧШЕННЫЙ ХЕДЕР */
         header { 
             border-bottom: 5px double var(--text-dark); 
             margin: 0 auto; 
@@ -67,7 +66,6 @@
             padding: 0 20px; 
         }
 
-        /* КОНТЕНТ НОВОСТЕЙ */
         .news-article { 
             border-bottom: 1px solid #ccc; 
             padding-bottom: 30px; 
@@ -93,14 +91,13 @@
         }
 
         .news-content { 
-            column-count: 2; /* ГАЗЕТНЫЕ КОЛОНКИ */
+            column-count: 2; 
             column-gap: 20px;
             text-align: justify;
             font-size: 1rem;
             color: #222;
         }
 
-        /* БИРЖА БОГДАНА */
         aside { 
             border-left: 2px solid var(--text-dark); 
             padding-left: 25px; 
@@ -134,25 +131,6 @@
             border: 1px dashed #ccc;
         }
 
-        .exchange-label {
-            font-size: 0.8rem;
-            color: var(--secondary-text);
-            text-transform: uppercase;
-            display: block;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        footer { 
-            border-top: 1px solid var(--text-dark); 
-            padding: 30px 0; 
-            text-align: center; 
-            font-size: 0.8rem; 
-            margin-top: 50px; 
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
         @media (max-width: 900px) {
             main { grid-template-columns: 1fr; }
             aside { border-left: none; padding-left: 0; border-top: 2px solid var(--text-dark); padding-top: 20px; }
@@ -171,22 +149,25 @@
     </header>
     
     <main>
-        <section id="news-container">ЗАГРУЗКА...</section>
+        <section id="news-container">ОЖИДАНИЕ СВОДКИ...</section>
         
         <aside>
             <div class="sidebar-box">
                 <h3 class="sidebar-title">БИРЖА BOGDAN</h3>
                 <div class="exchange-rate" id="exchange-val">1 RUB = 0.00 USD</div>
-                
+            </div>
             
             <div class="sidebar-box" style="font-size: 0.8rem;">
-                <strong>РЕКЛАМА:</strong> https://t.me/eblantale КРУТАЯ ИГРА.
+                <strong>РЕКЛАМА:</strong> <a href="https://t.me/eblantale" style="color: var(--accent-red); text-decoration: none; font-weight: bold;">EBLANTALE</a> — САМАЯ ОЖИДАЕМАЯ ИГРА ГОДА.
             </div>
         </aside>
     </main>
 
-    <footer>
-        COPYRIGHT © 2026 BOGDAN CORP. ВСЕ ПРАВА ПРИНАДЛЕЖАТ МНЕ.
+    <footer style="background: #f9f9f9; border-top: 1px solid #ccc; padding: 30px 0; text-align: center; font-size: 0.8rem; color: #666; margin-top: 50px;">
+        <p style="font-weight: bold; margin: 0; color: #1a1a1a;">© 2026 Информационное агентство BOGDANEWS. Все права защищены.</p>
+        <p style="font-size: 0.7rem; max-width: 600px; margin: 10px auto 0 auto; line-height: 1.4; color: #999;">
+            Материалы, размещенные на данном ресурсе, носят исключительно юмористический, сатирический и развлекательный характер. Все совпадения с реальными лицами или событиями случайны. 18+
+        </p>
     </footer>
 
     <script>
@@ -194,7 +175,6 @@
         var SUPABASE_KEY = 'sb_publishable_ZKaIa2ygxMrvn6M8urGE1A_1M4PR3jQ';
         var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // ОБНОВЛЕНИЕ БИРЖИ
         function updateExchange() {
             const val = (Math.random() * (1000 - 1) + 1).toFixed(2);
             document.getElementById('exchange-val').innerText = `1 РУБЛЬ = ${val} $`;
@@ -207,21 +187,21 @@
             async function getNews() {
                 var { data, error } = await supabase.from('news').select('*').order('id', { ascending: false });
                 var container = document.getElementById('news-container');
-                if (error) { container.innerHTML = "БАЗА ДАННЫХ УШЛА НА ПЕРЕРЫВ: " + error.message; return; }
+                if (error) { container.innerHTML = "ОШИБКА ПОДКЛЮЧЕНИЯ К СЕТИ: " + error.message; return; }
                 
                 container.innerHTML = data.map((n, i) => `
                     <article class="news-article">
                         <span class="category">${i === 0 ? 'ГЛАВНАЯ ТЕМА' : 'ИНСАЙД'}</span>
                         <h2 class="news-title">${n.title || 'БЕЗ НАЗВАНИЯ'}</h2>
-                        <div class="news-meta">АРХИВ // 2026</div>
-                        <div class="news-content">${n.content || 'КОНТЕНТ ЗАСЕКРЕЧЕН.'}</div>
+                        <div class="news-meta">2026 // BOGDAN REPORT</div>
+                        <div class="news-content">${n.content || 'ИНФОРМАЦИЯ УДАЛЕНА ЦЕНЗУРОЙ.'}</div>
                     </article>
                 `).join('');
             }
 
             getNews();
             updateExchange();
-            setInterval(updateExchange, 3000); // КУРС МЕНЯЕТСЯ КАЖДЫЕ 3 СЕКУНДЫ
+            setInterval(updateExchange, 3000);
         })();
     </script>
 </body>
