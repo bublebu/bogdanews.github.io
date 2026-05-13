@@ -79,7 +79,7 @@
         </section>
 
         <section id="news-container">
-            <div style="text-align: center; font-family: 'Roboto Mono';">ПОИСК НОВОСТЕЙ...</div>
+            <div id="loader" style="text-align: center; font-family: 'Roboto Mono';">ПОИСК НОВОСТЕЙ...</div>
         </section>
         
         <aside>
@@ -118,12 +118,14 @@
 
         let currentUser = null;
 
-        // ЭКСПОРТ ФУНКЦИЙ ДЛЯ КНОПОК
+        // ГЛОБАЛЬНЫЕ ФУНКЦИИ
         window.signInWithGoogle = async () => {
-            await sbClient.auth.signInWithOAuth({
-                provider: 'google',
-                options: { redirectTo: 'https://bublebu.github.io/bogdanews/' }
-            });
+            try {
+                await sbClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: { redirectTo: 'https://bublebu.github.io/bogdanews/' }
+                });
+            } catch (e) { console.error(e); }
         };
 
         window.signOut = async () => {
@@ -142,12 +144,9 @@
             const { error } = await sbClient.from('news').update({ [field]: (Number(current) || 0) + 1 }).eq('id', id);
             if (!error) {
                 localStorage.setItem(key, 'true');
-                loadNews(false); 
+                await loadNews(false); 
             }
         };
-
-        document.getElementById('btn-login').onclick = window.signInWithGoogle;
-        document.getElementById('btn-logout').onclick = window.signOut;
 
         async function checkUser() {
             const { data: { user } } = await sbClient.auth.getUser();
@@ -165,8 +164,6 @@
             }
         }
 
-        sbClient.auth.onAuthStateChange(() => checkUser());
-
         function formatDate(isoString) {
             if (!isoString) return "ВНЕ ВРЕМЕНИ";
             const date = new Date(isoString);
@@ -176,7 +173,17 @@
         async function loadNews(countView = true) {
             const { data, error } = await sbClient.from('news').select('*').order('id', { ascending: false });
             const container = document.getElementById('news-container');
-            if (error) return;
+            
+            if (error) {
+                console.error("Ошибка Supabase:", error);
+                container.innerHTML = `<div style="color:red">ОШИБКА ПОДКЛЮЧЕНИЯ К БАЗЕ</div>`;
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                container.innerHTML = `<div>НОВОСТЕЙ ПОКА НЕТ</div>`;
+                return;
+            }
 
             container.innerHTML = data.map((n, i) => {
                 const hasReacted = localStorage.getItem('reacted_' + n.id);
@@ -192,8 +199,8 @@
                     <h2 class="news-title">${n.title || 'НЕТ ДАННЫХ'}</h2>
                     <div class="news-content">${n.content || '...'}</div>
                     <div class="reactions">
-                        <button class="react-btn" ${hasReacted ? 'disabled' : ''} onclick="handleReaction(${n.id}, 'likes', ${n.likes || 0})">ОДОБРИТЬ (${n.likes || 0})</button>
-                        <button class="react-btn" ${hasReacted ? 'disabled' : ''} onclick="handleReaction(${n.id}, 'dislikes', ${n.dislikes || 0})">ОСУДИТЬ (${n.dislikes || 0})</button>
+                        <button class="react-btn" ${hasReacted ? 'disabled' : ''} onclick="window.handleReaction(${n.id}, 'likes', ${n.likes || 0})">ОДОБРИТЬ (${n.likes || 0})</button>
+                        <button class="react-btn" ${hasReacted ? 'disabled' : ''} onclick="window.handleReaction(${n.id}, 'dislikes', ${n.dislikes || 0})">ОСУДИТЬ (${n.dislikes || 0})</button>
                     </div>
                 </article>
             `}).join('');
@@ -209,16 +216,25 @@
             }
         }
 
+        // Инициализация
+        document.getElementById('btn-login').onclick = window.signInWithGoogle;
+        document.getElementById('btn-logout').onclick = window.signOut;
+        document.getElementById('live-date').innerText = new Date().toLocaleDateString('ru-RU', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
+
         function updateRates() {
             document.getElementById('exchange-val').innerText = `1 РУБ = ${(Math.random() * 999).toFixed(2)} USD`;
         }
 
-        document.getElementById('live-date').innerText = new Date().toLocaleDateString('ru-RU', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
-        
-        checkUser();
-        loadNews();
-        updateRates();
-        setInterval(updateRates, 5000);
+        // Запуск всего процесса
+        async function init() {
+            await checkUser();
+            await loadNews();
+            updateRates();
+            setInterval(updateRates, 5000);
+            sbClient.auth.onAuthStateChange(() => checkUser());
+        }
+
+        init();
     </script>
 </body>
 </html>
