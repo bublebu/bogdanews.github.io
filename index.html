@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOGDANEWS | ГИТХАБ ИЗДАНИЕ [v1.21.1]</title>
+    <title>BOGDANEWS</title>
     
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -74,7 +74,7 @@
     <div class="site-title">BogdaNews</div>
     <div style="font-family:'Roboto Mono'; border-top:1px solid #000; margin-top:10px; display:flex; justify-content:space-between; font-size:0.8rem; padding:5px 0;">
         <span id="date">...</span>
-        <span>GITHUB EDITION</span>
+        <span>КРУТО</span>
         <span>FREE PRESS</span>
     </div>
 </header>
@@ -163,7 +163,7 @@
         if (user) {
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('prop-section').style.display = 'block';
-            document.getElementById('user-status').innerText = `СОТРУДНИК: ${user.email.split('@')[0].toUpperCase()}`;
+            document.getElementById('user-status').innerText = `АККАУНТ: ${user.email.split('@')[0].toUpperCase()}`;
             document.getElementById('user-status').style.color = "green";
         } else {
             setTimeout(() => { 
