@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOGDANEWS | ГАЗЕТА</title>
+    <title>BOGDANEWS | ОФИЦИАЛЬНЫЙ ПОРТАЛ</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Roboto+Mono:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -13,31 +13,45 @@
             --text-dark: #121212; 
             --accent-red: #bc0000; 
             --border-thin: 1px solid rgba(0,0,0,0.15);
-            --border-thick: 3px solid var(--text-dark);
         }
         body { background-color: var(--main-bg); color: var(--text-dark); font-family: 'Roboto', sans-serif; margin: 0; padding: 0; }
+        
+        /* УВЕДОМЛЕНИЯ */
         #custom-alert {
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
             background: #000; color: #fff; padding: 15px 30px;
             font-family: 'Roboto Mono', monospace; z-index: 10000;
             border: 2px solid var(--accent-red); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase; font-weight: bold;
         }
         #custom-alert.show { top: 20px; }
-        header { border-bottom: 1px solid var(--text-dark); max-width: 1300px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+
+        header { border-bottom: 2px solid var(--text-dark); max-width: 1300px; margin: 0 auto; padding: 40px 20px; text-align: center; }
         .site-title { font-family: 'Playfair Display', serif; font-size: 5.5rem; margin: 0; text-transform: uppercase; letter-spacing: -3px; }
         .sub-header { border-top: 1px solid var(--text-dark); border-bottom: 4px double var(--text-dark); margin-top: 10px; padding: 10px 0; font-size: 0.85rem; text-transform: uppercase; font-family: 'Roboto Mono', monospace; display: flex; justify-content: space-between; }
+
         main { max-width: 1300px; margin: 40px auto; display: grid; grid-template-columns: 1fr 3fr 1fr; gap: 40px; padding: 0 20px; }
+        
         .news-article { margin-bottom: 60px; padding-bottom: 40px; border-bottom: var(--border-thin); }
-        .news-title { font-family: 'Playfair Display', serif; font-size: 3rem; margin: 10px 0; }
-        .news-content { font-size: 1.1rem; line-height: 1.6; text-align: justify; }
+        .news-title { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin: 15px 0; line-height: 1; }
+        .news-content { font-size: 1.1rem; line-height: 1.6; text-align: justify; color: #333; }
+        
         .reactions { margin-top: 25px; display: flex; gap: 10px; }
-        .react-btn { background: none; border: 1px solid #000; padding: 8px 15px; cursor: pointer; font-family: 'Roboto Mono'; font-weight: bold; }
+        .react-btn { background: none; border: 1px solid #000; padding: 8px 15px; cursor: pointer; font-family: 'Roboto Mono'; font-weight: bold; transition: 0.2s; }
         .react-btn:hover { background: #000; color: #fff; }
-        .react-btn:disabled { opacity: 0.5; cursor: not-allowed; background: #eee; }
-        .auth-card { background: #fff; border: 1px solid #000; padding: 15px; box-shadow: 8px 8px 0px #000; }
-        .auth-btn { width: 100%; padding: 12px; font-family: 'Roboto Mono'; font-weight: bold; border: 2px solid #000; cursor: pointer; margin-top: 10px; }
+
+        .sidebar-title { font-weight: bold; background: #000; color: #fff; padding: 5px 10px; margin-bottom: 15px; font-family: 'Roboto Mono'; font-size: 0.9rem; }
+        .auth-card { background: #fff; border: 1px solid #000; padding: 20px; box-shadow: 8px 8px 0px #000; margin-bottom: 30px; }
+        .auth-btn { width: 100%; padding: 12px; font-family: 'Roboto Mono'; font-weight: bold; border: 2px solid #000; cursor: pointer; margin-top: 10px; transition: 0.3s; }
         .login-btn { background: #000; color: #fff; }
-        .prop-input, .prop-area { width: 100%; border: 1px solid #000; padding: 8px; font-family: 'Roboto Mono'; margin-bottom: 10px; box-sizing: border-box; }
+        .login-btn:hover { background: var(--accent-red); border-color: var(--accent-red); }
+
+        .prop-input, .prop-area { width: 100%; border: 1px solid #000; padding: 10px; font-family: 'Roboto Mono'; margin-bottom: 10px; box-sizing: border-box; background: #fff; }
+        
+        /* ЮРИДИЧЕСКИЙ ФУТЕР */
+        footer { max-width: 1300px; margin: 60px auto 20px; padding: 20px; border-top: 1px solid #ccc; font-size: 0.7rem; color: #777; font-family: 'Roboto Mono'; text-align: center; line-height: 1.5; }
+        .legal-links a { color: #777; text-decoration: underline; margin: 0 10px; }
+
         @media (max-width: 1000px) { main { grid-template-columns: 1fr; } .site-title { font-size: 3.5rem; } }
     </style>
 </head>
@@ -47,41 +61,49 @@
     <header>
         <div class="site-title">BogdaNews</div>
         <div class="sub-header">
-            <span id="live-date">ДАТА</span>
-            <span>КРУТО</span>
-            <span>ТОМ CXIII — № 42</span>
+            <span id="live-date">...</span>
+            <span>ГАЗЕТА №1</span>
+            <span>ВЫПУСК CXIII</span>
         </div>
     </header>
     
     <main>
         <aside>
-            <div class="sidebar-title" style="font-weight: bold; background: #000; color: #fff; padding: 5px;">РЕДАКЦИЯ</div>
-            <p style="font-style: italic; font-size: 0.8rem;">"ПРАВДА — ЭТО ТОЛЬКО ТО, ЧТО МЫ ПЕЧАТАЕМ."</p>
+            <div class="sidebar-title">РЕДАКЦИЯ</div>
+            <p style="font-style: italic; font-size: 0.8rem; padding: 0 10px;">Все материалы защищены авторским правом. Мнение редакции может не совпадать с мнением авторов.</p>
         </aside>
 
         <section id="news-container">
-            <div style="text-align: center; font-family: 'Roboto Mono';">ЗАГРУЗКА ГАЗЕТЫ...</div>
+            <div style="text-align: center; font-family: 'Roboto Mono'; padding: 50px;">ПЕЧАТАЕМ НОВЫЙ ВЫПУСК...</div>
         </section>
         
         <aside>
             <div class="auth-card">
                 <div id="unauth-view">
-                    <button class="auth-btn login-btn" id="btn-login">ВХОД ЧЕРЕЗ GOOGLE</button>
+                    <p style="font-size: 0.75rem; margin-bottom: 10px; font-family: 'Roboto Mono';">ВОЙДИТЕ, ЧТОБЫ УБРАТЬ ПРОВЕРКИ И ПИСАТЬ В ГАЗЕТУ</p>
+                    <button class="auth-btn login-btn" id="btn-login">ВХОД GOOGLE</button>
                 </div>
                 <div id="auth-view" style="display: none;">
-                    <div id="user-email" style="font-family: 'Roboto Mono'; font-size: 0.8rem; margin-bottom: 10px;"></div>
-                    <button class="auth-btn" id="btn-logout">ВЫХОД</button>
+                    <div id="user-email" style="font-family: 'Roboto Mono'; font-size: 0.8rem; margin-bottom: 10px; word-break: break-all;"></div>
+                    <button class="auth-btn" id="btn-logout" style="font-size: 0.7rem; padding: 5px;">ВЫХОД</button>
                 </div>
             </div>
 
-            <div style="margin-top: 30px;">
-                <div style="font-weight: bold; background: #000; color: #fff; padding: 5px; margin-bottom: 10px;">ПРЕДЛОЖКА</div>
+            <div class="sidebar-box">
+                <div class="sidebar-title">ПРЕДЛОЖКА</div>
                 <input type="text" id="prop-title" class="prop-input" placeholder="ЗАГОЛОВОК">
-                <textarea id="prop-text" class="prop-area" placeholder="ТЕКСТ НОВОСТИ"></textarea>
+                <textarea id="prop-text" class="prop-area" placeholder="ТЕКСТ НОВОСТИ" style="height: 120px;"></textarea>
                 <button class="auth-btn login-btn" id="btn-send">ОТПРАВИТЬ</button>
             </div>
         </aside>
     </main>
+
+    <footer>
+        <div class="legal-links">
+            <a href="#">ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ</a> | <a href="#">УСЛОВИЯ ИСПОЛЬЗОВАНИЯ</a> | <a href="#">ОТКАЗ ОТ ОТВЕТСТВЕННОСТИ</a>
+        </div>
+        <p>© 2025-2026 BOGDANEWS. Весь контент создан пользователями. Администрация не несет ответственности за достоверность публикаций. Материалы носят юмористический и информационный характер.</p>
+    </footer>
 
     <script type="module">
         const S_URL = 'https://lqnluvjvghxoiqknfixp.supabase.co';
@@ -97,35 +119,51 @@
             setTimeout(() => el.classList.remove('show'), 3000);
         }
 
-        // 1. ЛОГИКА ВХОДА (ИСПРАВЛЕН РЕДИРЕКТ)
+        // --- ЛОГИКА КАПЧИ (КАЖДЫЕ 5 МИНУТ) ---
+        function startGuestGuard() {
+            setInterval(() => {
+                if (!user) {
+                    const num1 = Math.floor(Math.random() * 10);
+                    const num2 = Math.floor(Math.random() * 10);
+                    const answer = prompt(`ПРОВЕРКА РЕДАКЦИИ: Вы находитесь на сайте слишком долго без регистрации. Сколько будет ${num1} + ${num2}?`);
+                    
+                    if (parseInt(answer) !== (num1 + num2)) {
+                        alert("ПРОВЕРКА НЕ ПРОЙДЕНА. СТРАНИЦА БУДЕТ ПЕРЕЗАГРУЖЕНА.");
+                        location.reload();
+                    } else {
+                        alertMe("ПРОВЕРКА ПРОЙДЕНА. РЕКОМЕНДУЕМ ЗАРЕГИСТРИРОВАТЬСЯ.");
+                    }
+                }
+            }, 300000); // 300 000 мс = 5 минут
+        }
+
+        // --- АВТОРИЗАЦИЯ ---
         async function login() {
             const { error } = await sb.auth.signInWithOAuth({
                 provider: 'google',
-                options: {
-                    redirectTo: window.location.origin + window.location.pathname
-                }
+                options: { redirectTo: window.location.origin + window.location.pathname }
             });
             if (error) alertMe("ОШИБКА ВХОДА");
         }
 
-        // 2. ЛОГИКА РЕАКЦИЙ (ГЛОБАЛЬНО)
+        // --- РЕАКЦИИ ---
         window.handleReaction = async (id, type, current) => {
-            if (!user) return alertMe("ВОЙДИТЕ ДЛЯ ГОЛОСОВАНИЯ");
+            if (!user) return alertMe("ДЛЯ ГОЛОСОВАНИЯ НУЖЕН ВХОД");
             
             const storageKey = `vote_${id}_${type}`;
-            if (localStorage.getItem(storageKey)) return alertMe("УЖЕ ПРОГОЛОСОВАНО");
+            if (localStorage.getItem(storageKey)) return alertMe("ВЫ УЖЕ ГОЛОСОВАЛИ ЗА ЭТО");
 
-            const { error } = await sb.from('news').update({ [type]: current + 1 }).eq('id', id);
+            const { error } = await sb.from('news').update({ [type]: (Number(current) || 0) + 1 }).eq('id', id);
             
             if (!error) {
                 localStorage.setItem(storageKey, 'true');
                 loadNews();
             } else {
-                alertMe("ОШИБКА БАЗЫ");
+                alertMe("ОШИБКА ОБНОВЛЕНИЯ");
             }
         };
 
-        // 3. ЗАГРУЗКА НОВОСТЕЙ
+        // --- ЗАГРУЗКА НОВОСТЕЙ ---
         async function loadNews() {
             const { data, error } = await sb.from('news').select('*').order('id', { ascending: false });
             if (error) return;
@@ -133,8 +171,8 @@
             const container = document.getElementById('news-container');
             container.innerHTML = data.map(n => `
                 <article class="news-article">
-                    <div style="font-family: 'Roboto Mono'; font-size: 0.7rem; color: #666;">
-                        ${new Date(n.created_at).toLocaleDateString()} | ГЛАЗ: ${n.views || 0}
+                    <div style="font-family: 'Roboto Mono'; font-size: 0.75rem; color: #888; border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+                        ОПУБЛИКОВАНО: ${new Date(n.created_at).toLocaleDateString()} | ПРОСМОТРОВ: ${n.views || 0}
                     </div>
                     <h2 class="news-title">${n.title}</h2>
                     <div class="news-content">${n.content}</div>
@@ -146,37 +184,45 @@
             `).join('');
         }
 
-        // 4. ПРЕДЛОЖКА
+        // --- ОТПРАВКА ---
         async function sendProp() {
-            if (!user) return alertMe("НУЖЕН ВХОД");
+            if (!user) return alertMe("НУЖНА РЕГИСТРАЦИЯ");
+            
+            // Проверка на бан перед отправкой
+            const { data: prof } = await sb.from('profiles').select('is_banned').eq('id', user.id).single();
+            if (prof && prof.is_banned) return alertMe("ВАШ ДОСТУП ОГРАНИЧЕН АДМИНИСТРАЦИЕЙ");
+
             const title = document.getElementById('prop-title').value.trim();
             const content = document.getElementById('prop-text').value.trim();
 
-            if (!title || !content) return alertMe("ЗАПОЛНИ ПОЛЯ");
+            if (!title || !content) return alertMe("ЗАПОЛНИТЕ ВСЕ ПОЛЯ");
 
             const { error } = await sb.from('suggestions').insert([{ title, content, author_email: user.email }]);
             if (!error) {
-                alertMe("ОТПРАВЛЕНО В РЕДАКЦИЮ");
+                alertMe("ПРИНЯТО В ПЕЧАТЬ!");
                 document.getElementById('prop-title').value = '';
                 document.getElementById('prop-text').value = '';
             }
         }
 
-        // ИНИЦИАЛИЗАЦИЯ
+        // --- СТАРТ ---
         document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('btn-login').onclick = login;
             document.getElementById('btn-logout').onclick = () => { sb.auth.signOut(); location.reload(); };
             document.getElementById('btn-send').onclick = sendProp;
             
-            document.getElementById('live-date').innerText = new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
+            document.getElementById('live-date').innerText = new Date().toLocaleDateString('ru-RU', { 
+                weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' 
+            }).toUpperCase();
 
-            // Проверка юзера
             const { data } = await sb.auth.getUser();
             if (data.user) {
                 user = data.user;
                 document.getElementById('unauth-view').style.display = 'none';
                 document.getElementById('auth-view').style.display = 'block';
-                document.getElementById('user-email').innerText = user.email.toUpperCase();
+                document.getElementById('user-email').innerText = `РЕДАКТОР: ${user.email.split('@')[0].toUpperCase()}`;
+            } else {
+                startGuestGuard(); // Запуск таймера для гостей
             }
             loadNews();
         });
